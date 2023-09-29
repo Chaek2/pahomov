@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'dart:convert';
+import 'dart:io';
 import 'package:test/test.dart';
 
 class Student{
@@ -11,7 +12,8 @@ class Student{
   late String group;
   late double grade;
 
-  Student(int id,String surname,String middle, String firstname,int age,String group,double grade){
+
+  Student({required int id ,required String surname,required String middle,required  String firstname,required int age,required String group,required double grade}){
     this.id = id;
     this.surname = surname;
     this.middle = middle;
@@ -21,96 +23,178 @@ class Student{
     this.firstname = firstname;
   }
 
-  int OldStudent(Student student) => this.age - student.age;
 }
 
 class StudentList{
   List<Student>? students = null;
+
   StudentList(List<Student> students){
     this.students = students;
   }
+  
   void addStudent(Student student){
     students?.add(student);
   }
-  List<double> getAverageGrade(){
-    List<double> grade = [];
+
+  double getAverageGrade(){
+    double grade = 0;
     for(int i = 0;i<students!.length;i++){
-      grade.add(students![i].grade);
+      grade+=students![i].grade;
     }
+    grade/=students!.length;
     return grade;
+  }
+
+  int LenghtStudent(){
+    return students!.length;
+  }
 }
 
-}
-
-  List<Student>  getStudentWithHighestGrade(List<Student> students){
-    List<Student> sortstudent= students;
+Student  getStudentWithHighestGrade({required List<Student>? students, bool Highest = true}){
+    List<Student> sortstudent= students!;
     sortstudent.sort((a, b) => a.grade.compareTo(b.grade));
-    return sortstudent;
+    if(Highest){
+      return sortstudent.first;
+    }
+    else{
+      return sortstudent.last;
+    }
   }
 
 List<Student>  Start(){
-  List<Student> students = [Student(1, "Масликов", "Сергеев", "Кириллович", 22, "Т90-0-3", 5.3)];
-  students.add(Student(2, "Криминалов", "Иванович", "Павел", 21, "Т90-0-3", 1.2));
-  students.add(Student(3, "Гаврилова", "Алексеевна", "Виктория", 18, "Ф2-С0-Б1", 4.0));
-  students.add(Student(4, "Игнатьева", "Кирилловна", "Мария", 16, "", 1.3));
-  students.add(Student(5, "Кузнецова", "Тихоновна", "Лидия", 19, "К9-ГБ", 3.3));
-  students.add(Student(6, "Серова", "Константиновна", "Елена", 22, "Т90-0-3", 5.9));
-  students.add(Student(7, "Архипова", "Ярославовна", "Валерия", 20, "К2-ГБ", 8.8));
-  students.add(Student(8, "Титова", "Михайловна", "Дарина", 44, "К1-ГБ", 1.3));
-  students.add(Student(9, "Иванова", "Георгиевна", "Мария", 17, "Т90-1-1", 3.3));
-  students.add(Student(10, "Емельянова", "Ивановна", "Дарина", 18, "Т90-1-1", 6.3));
-  students.add(Student(11, "Сергеев", "Демидович", "Дмитрий", 18, "К9-ГБ", 5.5));
-  students.add(Student(12, "Баранова", "Даниэльевна", "Вера", 22, "К2-ГБ", 3.3));
-  students.add(Student(13, "Киреев", "Максимович", "Павел", 21, "Т90-0-3", 3.3));
-  students.add(Student(14, "Гусева", "Данииловна", "Варвара", 21, "Т90-0-3", 10.0));
-  students.add(Student(15, "Орлов", "Григорьевич", "Фёдор", 20, "Т90-0-3",7.3 ));
-  students.add(Student(16, "Осипов", "Филиппович", "Иван", 20, "Т90-0-3", 3.3));
-  students.add(Student(17, "Григорьева", "Никитична", "Алиса", 20, "Т90-1-1", 2.3));
-  students.add(Student(18, "Зимина", "Артуровна", "Алисия", 20, "Т90-1-1", 3.3));
-  students.add(Student(19, "Косарева", "Тимофеевна", "Злата", 21, "Ф2-С0-Б1", 3.1));
-  students.add(Student(20, "Федорова", "Марковна", "Ясмина", 22, "К2-ГБ", 3.3));
+  List<Student> students = [Student(id:1,surname: "Масликов",middle: "Сергеев",firstname: "Кириллович",age: 22,group: "Т90-0-3",grade:5.3)];
+  students.add(Student(id:2,surname:"Криминалов",middle:"Иванович",firstname:"Павел",age:  21,group:"Т90-0-3",grade: 1.2));
+  students.add(Student(id:3,surname:"Гаврилова",middle:"Алексеевна",firstname:"Виктория",age:  18,group:"Ф2-С0-Б1",grade: 4.0));
+  students.add(Student(id:4,surname:"Игнатьева",middle:"Кирилловна",firstname:"Мария",age:  16,group:"К9-ГБ",grade: 1.3));
+  students.add(Student(id:5,surname:"Кузнецова",middle:"Тихоновна",firstname:"Лидия",age:  19,group:"К9-ГБ",grade: 3.3));
+  students.add(Student(id:6,surname:"Серова",middle:"Константиновна",firstname:"Елена",age:  22,group:"Т90-0-3",grade: 5.9));
+  students.add(Student(id:7,surname:"Архипова",middle:"Ярославовна",firstname:"Валерия",age:  20,group:"К2-ГБ",grade: 8.8));
+  students.add(Student(id:8,surname:"Титова",middle:"Михайловна",firstname:"Дарина",age:  44,group:"К1-ГБ",grade: 1.3));
+  students.add(Student(id:9,surname:"Иванова",middle:"Георгиевна",firstname:"Мария",age:  17,group:"Т90-1-1",grade: 3.3));
+  students.add(Student(id:10,surname:"Емельянова",middle:"Ивановна",firstname:"Дарина",age:  18,group:"Т90-1-1",grade: 6.3));
+  students.add(Student(id:11,surname:"Сергеев",middle:"Демидович",firstname:"Дмитрий",age:  18,group:"К9-ГБ",grade: 5.5));
+  students.add(Student(id:12,surname:"Баранова",middle:"Даниэльевна",firstname:"Вера",age:  22,group:"К2-ГБ",grade: 3.3));
+  students.add(Student(id:13,surname:"Киреев",middle:"Максимович",firstname:"Павел",age:  21,group:"Т90-0-3",grade: 3.3));
+  students.add(Student(id:14,surname:"Гусева",middle:"Данииловна",firstname:"Варвара",age:  21,group:"Т90-0-3",grade: 10.0));
+  students.add(Student(id:15,surname:"Орлов",middle:"Григорьевич",firstname:"Фёдор",age:  20,group:"Т90-0-3",grade:7.3 ));
+  students.add(Student(id:16,surname:"Осипов",middle:"Филиппович",firstname:"Иван",age:  20,group:"Т90-0-3",grade: 3.3));
+  students.add(Student(id:17,surname:"Григорьева",middle:"Никитична",firstname:"Алиса",age:  20,group:"Т90-1-1",grade: 2.3));
+  students.add(Student(id:18,surname:"Зимина",middle:"Артуровна",firstname:"Алисия",age:  20,group:"Т90-1-1",grade: 3.3));
+  students.add(Student(id:19,surname:"Косарева",middle:"Тимофеевна",firstname:"Злата",age:  21,group:"Ф2-С0-Б1",grade: 3.1));
+  students.add(Student(id:20,surname:"Федорова",middle:"Марковна",firstname:"Ясмина",age:  22,group:"К2-ГБ",grade: 3.3));
   return students;
 }
-
-
 void InfoStudent({required int id,required String surname,required String middle,required String firstname,required int age,required String group,required double grade}){
     print("ID: $id\n Фамилия:$surname\n Имя:$firstname\n Отчетсво:$middle\n Возраст:$age\n Группа:$group\n Средний бал:$grade");
 }
-
+void InSt(Student student){
+  int ids = student.id;
+  String surnames = student.surname;
+  String firstnames = student.firstname;
+  String middles = student.middle;
+  int ages = student.age;
+  String groups = student.group;
+  double grade = student.grade;
+    print("ID: $ids\n Фамилия:$surnames\n Имя:$firstnames\n Отчетсво:$middles\n Возраст:$ages\n Группа:$groups\n Средний бал:$grade");
+}
 List<Student> KillStudent(int id,List<Student> students){
   students.removeAt(id);
   return students;
 }
-
 List<Student> ResetStudent(List<Student> students,int id,Student student){
   students[id] = student;
     return students;
 }
-
 void PrintStudents(List<Student> students,bool sorting){
   List<Student> sortStudent = students;
   if(sorting){
     sortStudent.sort((a, b) => a.surname.compareTo(b.surname));
-
   }
   for (var i = 0; i < students.length; i++) {
-  InfoStudent(id: students[i].id, surname: students[i].surname, middle: students[i].middle, firstname: students[i].firstname, age: students[i].age, group: students[i].group, grade: students[i].grade);
+    InfoStudent(id: students[i].id, surname: students[i].surname, middle: students[i].middle, firstname: students[i].firstname, age: students[i].age, group: students[i].group, grade: students[i].grade);
   }
 }
+late StudentList st;
 void main(List<String> arguments) {
-  List<Student> st = Start();
-  Student testST1 = Student(99, "Масликова", "Сергеевна", "Кристина", 20, "Т91-0-3", 4.3);
-  Student testST2 = Student(98, "Масликов", "Сергеев", "Кириллович", 15, "Т90-1-3", 5.1);
-  print(testST1.OldStudent(testST2));
-  PrintStudents(st, false);
-  PrintStudents(st, true);
-  st = ResetStudent(st, 10, testST2);
-  st = KillStudent(10, st);
-  PrintStudents(st, true);
-  StudentList SL = StudentList(st);
-  SL.addStudent(testST1);
-  List<double> grade = SL.getAverageGrade();
-  for (var i = 0; i < grade.length; i++) {
-    print("grade: "+grade[i].toString()+"\n");
+  st = StudentList(Start());
+  MainMenu();
+}
+void MainMenu(){
+  bool menu = true;
+  while (menu){
+    print("Меню:"+
+    "\n1-Добавить студента"+
+    "\n2-Удалить студента"+
+    "\n3-Редактировать данные студента"+
+    "\n4-Список студентов"+
+    "\n5-Студент с наивысшим баллом"+
+    "\n6-Студент с наименьшим баллом"+
+    "\n7-Средний балл всех студентов"+
+    "\n8-Фильтрация"+
+    "\n9-выход");
+    int a = int.parse(stdin.readLineSync().toString());
+    switch(a){
+      case 1:
+        print("id от 0 до "+st.LenghtStudent().toString());
+        int b = int.parse(stdin.readLineSync().toString());
+        if(b<st.LenghtStudent() && b>-1){
+          MenuResetStudent(idstudent:b,st:st.students!);
+        }
+        break;
+      case 2:
+        print("id от 0 до "+st.LenghtStudent().toString());
+        int b = int.parse(stdin.readLineSync().toString());
+        if(b<st.LenghtStudent() && b>-1){
+          KillStudent(b, st.students!);
+        }
+        break;
+      case 3:
+          MenuAddStudent(st:st);
+        break;
+      case 4:
+          PrintStudents(st.students!, false);
+        break;
+      case 5:
+          InSt(getStudentWithHighestGrade(students: st.students!,Highest: true));
+        break;
+      case 6:
+          InSt(getStudentWithHighestGrade(students: st.students!,Highest: false));
+        break;
+      case 7:
+        print(st.getAverageGrade().toString());
+        break;
+      case 8:
+        PrintStudents(st.students!,true);
+        break;
+      case 9:
+      menu = false;
+        break;
+      case _:
+        break;
+    }
   }
+}
+void MenuResetStudent({required int idstudent,required List<Student> st}){
+  print("Введите id, Фамилия, Отчество, Имя, возраст, группу, средний бал: (через enter)");
+    int id = int.parse(stdin.readLineSync().toString());
+    String surname = stdin.readLineSync().toString();
+    String middle = stdin.readLineSync().toString();
+    String firstname = stdin.readLineSync().toString();
+    int age = int.parse(stdin.readLineSync().toString());
+    String group = stdin.readLineSync().toString();
+    double grade = double.parse(stdin.readLineSync().toString());
+    Student student = Student(id: id, surname: surname, middle: middle, firstname: firstname, age: age, group: group, grade: grade);
+    st[idstudent] = student;
+}
+void MenuAddStudent({required StudentList st}){
+  print("Введите id, Фамилия, Отчество, Имя, возраст, группу, средний бал: (через enter)");
+    int id = int.parse(stdin.readLineSync().toString());
+    String surname = stdin.readLineSync().toString();
+    String middle = stdin.readLineSync().toString();
+    String firstname = stdin.readLineSync().toString();
+    int age = int.parse(stdin.readLineSync().toString());
+    String group = stdin.readLineSync().toString();
+    double grade = double.parse(stdin.readLineSync().toString());
+    Student student = Student(id: id, surname: surname, middle: middle, firstname: firstname, age: age, group: group, grade: grade);
+    st.addStudent(student);
 }
