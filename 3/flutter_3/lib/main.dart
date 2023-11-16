@@ -18,6 +18,7 @@ class _MainApp extends State<MainApp> {
   String result = "";
   String resultS = "";
   bool thers = false;
+  final myController = TextEditingController();
 
   void buttonClick(String text) {
     setState(() {
@@ -25,6 +26,7 @@ class _MainApp extends State<MainApp> {
         case "C":
           result = "";
           resultS = "";
+          myController.clear();
           thers = false;
         case "=":
           var rs = result.interpret();
@@ -35,7 +37,6 @@ class _MainApp extends State<MainApp> {
             double sd = double.parse(result);
             int si = int.parse(sd.round().toString());
             resultS = si.toRadixString(2);
-            // print(s);
           }
         case "10/8":
           if (thers) {
@@ -56,6 +57,12 @@ class _MainApp extends State<MainApp> {
     });
   }
 
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
   TextButton ButtonText(String text) {
     return TextButton(
       onPressed: () {
@@ -65,8 +72,14 @@ class _MainApp extends State<MainApp> {
     );
   }
 
+  void _printLatestValue() {
+    myController.text = result;
+    print(myController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
+    myController.addListener(_printLatestValue);
     return MaterialApp(
       home: Scaffold(
         body: Padding(
@@ -75,7 +88,13 @@ class _MainApp extends State<MainApp> {
               children: [
                 Row(
                   children: [
-                    Text(result),
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        readOnly: true,
+                        controller: myController,
+                      ),
+                    ),
                     ButtonText("="),
                     Text(resultS),
                   ],
