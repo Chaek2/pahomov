@@ -12,11 +12,17 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
+  repositories {
+    google()
+    mavenCentral()
+  }
+  tasks.withType(JavaCompile).configureEach {
+    javaCompiler = javaToolchains.compilerFor {
+      languageVersion = JavaLanguageVersion.of(8)
     }
+  }
 }
+
 
 rootProject.buildDir = '../build'
 subprojects {
