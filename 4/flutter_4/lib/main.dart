@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'second.dart';
+import 'counter.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +12,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return ListenableProvider(
+      lazy: true,
+      create: (_) => Counter(),
+      child: MaterialApp(home: FirstApp()),
     );
   }
 }
