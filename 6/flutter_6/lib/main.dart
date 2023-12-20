@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'dart:io';
 import 'PersonAdapter.dart';
 import 'Person.dart';
@@ -113,63 +114,20 @@ class AddPersonApp extends StatefulWidget {
 }
 
 class _AddPersonApp extends State<AddPersonApp> {
-  String name = '';
-  String surname = '';
-  String path = '';
-  TextTheme theme = TextTheme(
-      headline1: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold));
   @override
   Widget build(BuildContext context) {
-    List<Person> users = box!.get('list');
-    return MaterialApp(
-      home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(top: 45, right: 10, left: 10),
-          child: Container(
-            child: Column(children: [
-              TextField(
-                onChanged: (value) => name = value,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  icon: Icon(Icons.code),
-                  hintText: "Name",
-                ),
-              ),
-              TextField(
-                onChanged: (value) => surname = value,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  icon: Icon(Icons.code),
-                  hintText: "Surname",
-                ),
-              ),
-              TextField(
-                onChanged: (value) => path = value,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  icon: Icon(Icons.code),
-                  hintText: "Path",
-                ),
-              ),
-              IconButton(
-                  onPressed: () async {
-                    if (name.runes.length > 0 &&
-                        surname.runes.length > 0 &&
-                        path.runes.length > 0) {
-                      var person = Person(
-                          name: name,
-                          surname: surname,
-                          path_img: path,
-                          theme: theme);
-                      users.add(person);
-                      await box!.put('list', users);
-                      Navigator.pop(context);
-                    }
-                  },
-                  icon: Icon(Icons.add))
-            ]),
+    return CurrentLocationLayer(
+      followOnLocationUpdate: FollowOnLocationUpdate.always,
+      turnOnHeadingUpdate: TurnOnHeadingUpdate.never,
+      style: LocationMarkerStyle(
+        marker: const DefaultLocationMarker(
+          child: Icon(
+            Icons.navigation,
+            color: Colors.white,
           ),
         ),
+        markerSize: const Size(40, 40),
+        markerDirection: MarkerDirection.heading,
       ),
     );
   }

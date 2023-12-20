@@ -65,7 +65,9 @@ class _FirstApp extends State<FirstApp> {
                                         (Route<dynamic> route) => false);
                                     break;
                                   case "4":
-                                    Navigator.pushNamed(context, '/four');
+                                    Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
+                                                FourApp()));
                                     break;
                                   case _:
                                     Navigator.push(
