@@ -47,8 +47,10 @@ class StartApp extends StatelessWidget {
       home: Builder(
         builder: (context) => Scaffold(
           body: Padding(
+
             padding: EdgeInsets.only(top: 45, right: 10, left: 10),
             child: Container(
+              
               child: Column(
                 children: [
                   TextField(
@@ -99,7 +101,7 @@ class _FirstApp extends State<FirstApp> {
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.only(top: 45, right: 10, left: 10),
-          child: Container(),
+          child: ButtonStyle(),
         ),
       ),
     );
