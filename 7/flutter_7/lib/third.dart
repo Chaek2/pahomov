@@ -45,12 +45,40 @@ class ThirdApp extends StatelessWidget {
               },
               child: const Text("SnackBar"),
             ),
-            IconButton(
-                onPressed: () {
-                  DateTime now = DateTime.now();
-                  glob.AddWord(Word(now.toString(), now.toString()));
-                },
-                icon: const Icon(Icons.add))
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(
+                  child: TextButton(
+                    onPressed: () {
+                      DateTime now = DateTime.now();
+                      glob.AddWord(Word(now.timeZoneName, now.timeZoneName));
+                    },
+                    child: Text("timeZoneName"),
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextButton(
+                    onPressed: () {
+                      DateTime now = DateTime.now();
+                      glob.AddWord(
+                          Word("Day" + now.day.toString(), now.day.toString()));
+                    },
+                    child: Text("day"),
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextButton(
+                    onPressed: () {
+                      DateTime now = DateTime.now();
+                      glob.AddWord(Word(
+                          "Hour" + now.hour.toString(), now.hour.toString()));
+                    },
+                    child: Text("hour"),
+                  ),
+                ),
+                //Есть onSelected но мне лень его использовать, если что-то не добавляется и я пришёл сюда, то ты косой, там кнопка
+              ],
+            )
           ],
           title: const Text('Словарь Игоря и Славы'),
         ),
