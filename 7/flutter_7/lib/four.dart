@@ -65,6 +65,7 @@ class _FourApp extends State<FourApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text("Словарь")),
         body: Center(

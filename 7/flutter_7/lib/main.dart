@@ -36,10 +36,7 @@ class _MainApp extends State<MainApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: _pages.elementAt(_selectedIndex),
-          ),
+          child: _pages.elementAt(_selectedIndex),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
